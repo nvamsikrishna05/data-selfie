@@ -8,5 +8,26 @@
 </head>
 <body>
     <h1>Welcome to the Data Selfie App</h1>
+
+    <p>
+        Latitude: <span id="latitude"></span>&deg; <br/>
+        Longitude: <span id="longitude"></span>&deg;
+    </p>
+
+    <script>
+        if('geolocation' in navigator){
+            console.log('Geolocation is available');
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                document.querySelector('#latitude').textContent = lat;
+                document.querySelector('#longitude').textContent = long;
+            });
+
+        }else{
+            console.log('Geolocation is not available');
+        }
+    </script>
 </body>
 </html>
