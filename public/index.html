@@ -14,17 +14,15 @@
         Longitude: <span id="longitude"></span>&deg;
     </p>
 
+    <button id="submit" style="visibility: hidden">Submit</button>
+
     <script>
-        if('geolocation' in navigator){
-            console.log('Geolocation is available');
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords.latitude;
-                const long = position.coords.longitude;
 
-                document.querySelector('#latitude').textContent = lat;
-                document.querySelector('#longitude').textContent = long;
+        const sendLocation = async () => {
 
-                const data = {
+            const lat = document.querySelector('#latitude').textContent;
+            const long = document.querySelector('#longitude').textContent;
+            const data = {
                     lat, long
                 };
                 const options = {
@@ -37,11 +35,24 @@
                 const response = await fetch('/api', options);
                 const json = await response.json();
                 console.log(json);
+        }
+
+        if('geolocation' in navigator){
+            console.log('Geolocation is available');
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                document.querySelector('#latitude').textContent = lat;
+                document.querySelector('#longitude').textContent = long;
+                document.querySelector('#submit').setAttribute('style', 'visibility: visible');
             });
 
         }else{
             console.log('Geolocation is not available');
         }
+
+        document.querySelector('#submit').addEventListener('click', sendLocation);
     </script>
 </body>
 </html>

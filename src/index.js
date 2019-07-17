@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const express = require('express');
-
+const Datastore = require('nedb');
 
 // Setup a Server using Expess
 const app = express();
@@ -12,6 +12,10 @@ app.listen(PORT, () => {
     console.log(`Server is up and running on PORT ${PORT}`);
 });
 
+//SetUp Database
+const database = new Datastore('dataSelfie.db');
+database.loadDatabase();
+
 // Configure Middleware
 // Serve the Static Assets
 app.use(express.static('public'));
@@ -19,10 +23,19 @@ app.use(express.json({limit: '1mb'}));
 
 // SetUp Routes
 app.post('/api', (req, res) => {
-    console.log(req.body);
+
+    const data = req.body;
+    const timeStamp = Date.now();
+    data.timeStamp = timeStamp;
+
+    //Store the data into Database
+    database.insert(data);
+
     res.json({
         status: 'Success',
-        latitude: req.body.lat,
-        longitude: req.body.long
+        latitude: data.lat,
+        longitude: data.long,
+        timeStamp: data.timeStamp
     });
+
 });
