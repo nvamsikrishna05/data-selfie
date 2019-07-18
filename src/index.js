@@ -39,3 +39,12 @@ app.post('/api', (req, res) => {
     });
 
 });
+
+app.get('/api', (req, res) => {
+    database.find({}, (error, data) => {
+        if(error){
+            return res.status(500).send('Error Occured While Fetching the data');
+        }
+        res.json(data);
+    });
+});
