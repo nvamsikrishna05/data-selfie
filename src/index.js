@@ -31,12 +31,7 @@ app.post('/api', (req, res) => {
     //Store the data into Database
     database.insert(data);
 
-    res.json({
-        status: 'Success',
-        latitude: data.lat,
-        longitude: data.long,
-        timeStamp: data.timeStamp
-    });
+    res.json(data);
 
 });
 

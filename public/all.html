@@ -8,20 +8,26 @@
 </head>
 <body>
     <h1>Data Selfie App</h1>
+    <nav>
+        <a href="./index.html">Enter Data</a>
+        <a href="#">View Data</a>
+    </nav>
     <script>
         async function getData(){
             const response = await fetch('/api');
             const data = await response.json();
 
             data.forEach(element => {
-                const root = document.createElement('div');
-                const location = document.createElement('div');
-                location.textContent = `Latitude: ${element.lat} Longitudue: ${element.long}`;
+                const root = document.createElement('p');
+                const location = document.createElement('p');
+                const date = document.createElement('p');
+                const image = document.createElement('img');
 
-                const date = document.createElement('div');
+                location.textContent = `Latitude: ${element.lat}  Longitudue: ${element.long}`;
                 date.textContent = `Date: ${new Date(element.timeStamp).toLocaleString()}`;
+                image.src = element.image64;
 
-                root.append(location, date);
+                root.append(location, date, image);
                 document.body.append(root);
             });
 

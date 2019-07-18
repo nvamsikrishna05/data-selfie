@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Data Selfie App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js" integrity="sha256-WVsM3xrcqyuFNF3W1qtIKbHFsD0977nDQA8DCMp1zCw=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js" integrity="sha256-2/3R3NV5zryj0fDjD3cDh+SNiWQ/TJiMVZzAo5FrhiU=" crossorigin="anonymous"></script>
 </head>
 <body>
     <h1>Welcome to the Data Selfie App</h1>
-
+    <nav>
+        <a href="#">Enter Data</a> &nbsp;| &nbsp;
+        <a href="./all.html">View Data</a>
+    </nav>
     <p>
         Latitude: <span id="latitude"></span>&deg; <br/>
         Longitude: <span id="longitude"></span>&deg;
@@ -18,12 +23,20 @@
 
     <script>
 
-        const sendLocation = async () => {
+        function setup(){
+
+            noCanvas();
+            const video = createCapture(VIDEO);
+            video.size(320, 240);
+
+            const sendLocation = async () => {
 
             const lat = document.querySelector('#latitude').textContent;
             const long = document.querySelector('#longitude').textContent;
+            video.loadPixels();
+            const image64 = video.canvas.toDataURL();
             const data = {
-                    lat, long
+                    lat, long, image64
                 };
                 const options = {
                     method: 'POST',
@@ -35,9 +48,9 @@
                 const response = await fetch('/api', options);
                 const json = await response.json();
                 console.log(json);
-        }
+            }
 
-        if('geolocation' in navigator){
+            if('geolocation' in navigator){
             console.log('Geolocation is available');
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const lat = position.coords.latitude;
@@ -47,12 +60,15 @@
                 document.querySelector('#longitude').textContent = long;
                 document.querySelector('#submit').setAttribute('style', 'visibility: visible');
             });
-
-        }else{
+            }else{
             console.log('Geolocation is not available');
+            }
+            document.querySelector('#submit').addEventListener('click', sendLocation);
+
+
         }
 
-        document.querySelector('#submit').addEventListener('click', sendLocation);
+
     </script>
 </body>
 </html>
